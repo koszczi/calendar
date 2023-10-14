@@ -1,15 +1,14 @@
 package com.koszczi.calendar.application.event.validation;
 
+import com.koszczi.calendar.application.event.dto.ValidationError;
 import com.koszczi.calendar.application.event.dto.EventDto;
-import com.koszczi.calendar.application.event.validation.*;
 import com.koszczi.calendar.model.event.Event;
 import org.junit.jupiter.api.Test;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Set;
 
+import static com.koszczi.calendar.application.event.dto.ValidationError.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EventValidatorTests {
@@ -22,7 +21,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 14, 11, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(NotWeekdayException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(NOT_WEEKDAY));
   }
 
   @Test
@@ -31,7 +32,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 10, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(OutOfTimerangeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(OUT_OF_TIMERANGE));
   }
 
   @Test
@@ -40,7 +43,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 20, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(OutOfTimerangeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(OUT_OF_TIMERANGE));
   }
 
   @Test
@@ -49,7 +54,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 18, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(OutOfTimerangeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(OUT_OF_TIMERANGE));
   }
 
   @Test
@@ -58,7 +65,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 17, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(InvalidTimeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(INVALID_TIME));
   }
 
   @Test
@@ -67,7 +76,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 16, 30, 10);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(InvalidTimeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(INVALID_TIME));
   }
 
   @Test
@@ -76,7 +87,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 16, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(InvalidTimeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(INVALID_TIME));
   }
 
   @Test
@@ -85,7 +98,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 16, 2, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(InvalidTimeException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(INVALID_TIME));
   }
 
   @Test
@@ -94,7 +109,9 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 13, 30, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertThrows(EventTooLongException.class, () -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(EVENT_TOO_LONG));
   }
 
   @Test
@@ -103,7 +120,22 @@ public class EventValidatorTests {
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 12, 00, 00);
     EventDto eventDto = new EventDto(eventStart, eventEnd);
 
-    assertDoesNotThrow(() -> eventValidator.validateDto(eventDto));
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(0, failures.size());
+  }
+
+  @Test
+  public void dtoValidation_whenMultipleProblems_allReturnInSet() throws Exception {
+    LocalDateTime eventStart = LocalDateTime.of(2023, 10, 14, 5, 10, 00);
+    LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 14, 18, 00, 10);
+    EventDto eventDto = new EventDto(eventStart, eventEnd);
+
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(4, failures.size());
+    assertTrue(failures.contains(EVENT_TOO_LONG));
+    assertTrue(failures.contains(INVALID_TIME));
+    assertTrue(failures.contains(NOT_WEEKDAY));
+    assertTrue(failures.contains(OUT_OF_TIMERANGE));
   }
 
   @Test
