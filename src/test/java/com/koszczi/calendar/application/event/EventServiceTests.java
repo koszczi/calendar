@@ -1,5 +1,6 @@
 package com.koszczi.calendar.application.event;
 
+import com.koszczi.calendar.application.event.dto.EventCreationError;
 import com.koszczi.calendar.application.event.dto.EventDto;
 import com.koszczi.calendar.application.event.dto.ValidationError;
 import com.koszczi.calendar.application.event.validation.EventValidator;
@@ -48,10 +49,10 @@ public class EventServiceTests {
     assertEquals(VALIDATION_FAILURE, result.status());
 
     assertEquals(4, result.errors().size());
-    assertTrue(result.errors().contains(INVALID_TIME));
-    assertTrue(result.errors().contains(EVENT_TOO_LONG));
-    assertTrue(result.errors().contains(OUT_OF_TIMERANGE));
-    assertTrue(result.errors().contains(OVERLAPPING_EVENTS));
+    assertTrue(result.errors().contains(EventCreationError.of(INVALID_TIME)));
+    assertTrue(result.errors().contains(EventCreationError.of(EVENT_TOO_LONG)));
+    assertTrue(result.errors().contains(EventCreationError.of(OUT_OF_TIMERANGE)));
+    assertTrue(result.errors().contains(EventCreationError.of(OVERLAPPING_EVENTS)));
 
     assertEquals(1, result.overlappingEvents().size());
 

@@ -1,5 +1,6 @@
 package com.koszczi.calendar.application.event;
 
+import com.koszczi.calendar.application.event.dto.EventCreationError;
 import com.koszczi.calendar.application.event.dto.ValidationError;
 import com.koszczi.calendar.application.event.dto.EventCreationResult;
 import com.koszczi.calendar.application.event.dto.EventDto;
@@ -31,9 +32,9 @@ public class EventService {
 
       if (validationErrors.isEmpty()) {
         newEvent = eventRepository.save(newEvent);
-        return new EventCreationResult(SUCCESS, validationErrors, List.of(), newEvent);
+        return new EventCreationResult(SUCCESS, List.of(), List.of(), newEvent);
       } else {
-        return new EventCreationResult(VALIDATION_FAILURE, validationErrors, overLappingEvents, null);
+        return new EventCreationResult(VALIDATION_FAILURE, validationErrors.stream().map(EventCreationError::of).toList(), overLappingEvents, null);
       }
 
     } catch (Exception e) {
