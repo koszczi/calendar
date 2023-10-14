@@ -1,43 +1,35 @@
-package com.koszczi.calendar.application.event;
+package com.koszczi.calendar.application.event.validation;
 
 import com.koszczi.calendar.application.event.dto.EventDto;
-import com.koszczi.calendar.application.event.exception.EventTooLongException;
-import com.koszczi.calendar.application.event.exception.InvalidTimeException;
-import com.koszczi.calendar.application.event.exception.NotWeekdayException;
-import com.koszczi.calendar.application.event.exception.OutOfTimerangeException;
 import com.koszczi.calendar.model.event.Event;
+import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
 
 import static java.time.DayOfWeek.SATURDAY;
 import static java.time.DayOfWeek.SUNDAY;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
-public class EventExtractor {
+@Service
+public class EventValidator {
 
   public static final LocalTime NINE_IN_THE_MORNING = LocalTime.of(9, 0, 0);
   public static final LocalTime FIVE_IN_THE_EVENING = LocalTime.of(17, 0, 0);
   public static final int ALLOWED_EVENT_LENGTH_MINS = 180;
 
-  public Event validateDtoAndExtractEvent(EventDto eventDto) throws NotWeekdayException, OutOfTimerangeException,
+  public boolean eventsOverLap(Event event1, Event event2) {
+    return  (event1.getDate().equals(event2.getDate()))
+        && event1.getStart().isBefore(event2.getEnd()) && event2.getStart().isBefore(event1.getEnd());
+  }
+
+
+  public void validateDto(EventDto eventDto) throws NotWeekdayException, OutOfTimerangeException,
       InvalidTimeException, EventTooLongException {
     validateDateTime(eventDto.startDateTime());
     validateDateTime(eventDto.endDateTime());
     validateEventLength(eventDto.startDateTime(), eventDto.endDateTime());
-
-    TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-    return new Event(
-      eventDto.startDateTime().getYear(),
-      eventDto.startDateTime().get(woy),
-      eventDto.startDateTime().getDayOfWeek(),
-      eventDto.startDateTime().toLocalTime(),
-      eventDto.endDateTime().toLocalTime()
-    );
   }
 
   private void validateDateTime(LocalDateTime dateTime) throws NotWeekdayException, OutOfTimerangeException, InvalidTimeException {
