@@ -1,5 +1,6 @@
 package com.koszczi.calendar.application.event;
 
+import com.koszczi.calendar.application.event.dto.EventDto;
 import com.koszczi.calendar.application.event.exception.EventTooLongException;
 import com.koszczi.calendar.application.event.exception.InvalidTimeException;
 import com.koszczi.calendar.application.event.exception.NotWeekdayException;
