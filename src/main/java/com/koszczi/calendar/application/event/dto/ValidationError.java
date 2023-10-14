@@ -3,6 +3,7 @@ package com.koszczi.calendar.application.event.dto;
 import lombok.Getter;
 
 public enum ValidationError {
+  EVENT_TOO_SHORT("Event must be at least 30 minutes long"),
   EVENT_TOO_LONG("Event is too long"),
   INVALID_TIME("Events can start/end at XX:00:00 or XX:30:00"),
   NOT_WEEKDAY("Events can be created only for weekdays"),

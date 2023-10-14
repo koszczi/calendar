@@ -23,6 +23,7 @@ public class EventValidator {
   public static final LocalTime NINE_IN_THE_MORNING = LocalTime.of(9, 0, 0);
   public static final LocalTime FIVE_IN_THE_EVENING = LocalTime.of(17, 0, 0);
   public static final int MAX_EVENT_LENGTH_MINS = 180;
+  public static final int MIN_EVENT_LENGTH_MINS = 30;
 
   public boolean eventsOverLap(Event event1, Event event2) {
     return event1.getDate().equals(event2.getDate())
@@ -35,7 +36,8 @@ public class EventValidator {
 
     validationFailures.addAll(validateDateTime(eventDto.startDateTime()));
     validationFailures.addAll(validateDateTime(eventDto.endDateTime()));
-    validateEventLength(eventDto.startDateTime(), eventDto.endDateTime()).ifPresent(validationFailures::add);
+    validateEventNotTooLong(eventDto.startDateTime(), eventDto.endDateTime()).ifPresent(validationFailures::add);
+    validateEventNotTooShort(eventDto.startDateTime(), eventDto.endDateTime()).ifPresent(validationFailures::add);
 
     return validationFailures;
   }
@@ -71,7 +73,11 @@ public class EventValidator {
     return Optional.empty();
   }
 
-  private Optional<ValidationError> validateEventLength(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+  private Optional<ValidationError> validateEventNotTooLong(LocalDateTime startDateTime, LocalDateTime endDateTime) {
     return startDateTime.until(endDateTime, MINUTES) > MAX_EVENT_LENGTH_MINS ? Optional.of(EVENT_TOO_LONG) : Optional.empty();
+  }
+
+  private Optional<ValidationError> validateEventNotTooShort(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return startDateTime.until(endDateTime, MINUTES) < MIN_EVENT_LENGTH_MINS ? Optional.of(EVENT_TOO_SHORT) : Optional.empty();
   }
 }

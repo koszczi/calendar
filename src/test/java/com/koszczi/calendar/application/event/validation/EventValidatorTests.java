@@ -117,6 +117,17 @@ public class EventValidatorTests {
   }
 
   @Test
+  public void dtoValidation_whenEventShorterThanAllowed_exception() {
+    LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 10, 00, 00);
+    LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 10, 00, 00);
+    EventDto eventDto = new EventDto(eventStart, eventEnd, ORGANIZER);
+
+    Set<ValidationError> failures = eventValidator.validateDto(eventDto);
+    assertEquals(1, failures.size());
+    assertTrue(failures.contains(EVENT_TOO_SHORT));
+  }
+
+  @Test
   public void dtoValidation_whenValidationIsSuccessful_noException() throws Exception {
     LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 10, 00, 00);
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 12, 00, 00);
