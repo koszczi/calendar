@@ -48,7 +48,10 @@ public class Event extends BaseEntity {
   @Column(name = "event_end")
   private LocalTime end;
 
-  public Event(LocalDateTime start, LocalDateTime end) {
+  @Column(name = "organizer")
+  private String organizer;
+
+  public Event(LocalDateTime start, LocalDateTime end, String organizer) {
     this.year = start.getYear();
     TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
     this.week = start.get(woy);
@@ -56,10 +59,11 @@ public class Event extends BaseEntity {
     this.dayOfWeek = start.getDayOfWeek();
     this.start = start.toLocalTime();
     this.end = end.toLocalTime();
+    this.organizer = organizer;
   }
 
   @Override
   public String toString() {
-    return String.format("Event on %s, from %s to %s", date.toString(), start.toString(), end.toString());
+    return String.format("Event on %s, from %s to %s, organized by %s", date, start, end, organizer);
   }
 }

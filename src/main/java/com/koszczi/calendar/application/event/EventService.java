@@ -26,7 +26,7 @@ public class EventService {
   public EventCreationResult createEvent(EventDto eventDto) {
     try {
       Set<ValidationError> validationErrors = eventValidator.validateDto(eventDto);
-      Event newEvent = new Event(eventDto.startDateTime(), eventDto.endDateTime());
+      Event newEvent = new Event(eventDto.startDateTime(), eventDto.endDateTime(), eventDto.organizer());
       List<String> overLappingEvents = collectOverlappingEvents(newEvent);
       if (!overLappingEvents.isEmpty()) validationErrors.add(OVERLAPPING_EVENTS);
 

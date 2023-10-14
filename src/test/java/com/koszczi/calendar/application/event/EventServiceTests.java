@@ -34,11 +34,13 @@ public class EventServiceTests {
   @InjectMocks
   private EventService eventService;
 
+  private static final String ORGANIZER = "organizer";
+
   @Test
   public void whenThereAreValidationFailures_VALIDATION_FAILURE() {
     LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 8, 10, 00);
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 14, 00, 10);
-    EventDto eventDto = new EventDto(eventStart, eventEnd);
+    EventDto eventDto = new EventDto(eventStart, eventEnd, ORGANIZER);
 
     Set<ValidationError> validationErrors = prepareDtoValidationErrors();
     when(eventValidator.validateDto(eventDto)).thenReturn(validationErrors);
@@ -63,7 +65,7 @@ public class EventServiceTests {
   public void whenExceptionIsThrownSomewhere_ERROR() {
     LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 8, 10, 00);
     LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 14, 00, 10);
-    EventDto eventDto = new EventDto(eventStart, eventEnd);
+    EventDto eventDto = new EventDto(eventStart, eventEnd, ORGANIZER);
 
     when(eventValidator.validateDto(eventDto)).thenThrow(new RuntimeException());
 
@@ -77,9 +79,9 @@ public class EventServiceTests {
 
   @Test
   public void whenValidationPassesAndNoException_SUCCESS() {
-    LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 8, 10, 00);
-    LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 14, 00, 10);
-    EventDto eventDto = new EventDto(eventStart, eventEnd);
+    LocalDateTime eventStart = LocalDateTime.of(2023, 10, 13, 11, 00, 00);
+    LocalDateTime eventEnd = LocalDateTime.of(2023, 10, 13, 14, 00, 00);
+    EventDto eventDto = new EventDto(eventStart, eventEnd, ORGANIZER);
 
     when(eventValidator.validateDto(eventDto)).thenReturn(Set.of());
     when(eventRepository.findAllByDate(eventStart.toLocalDate())).thenReturn(List.of());
@@ -105,10 +107,14 @@ public class EventServiceTests {
   private List<Event> prepareEventsForTheDay() {
     List<Event> allEventsForTheDay = new ArrayList<>();
     Event overLappingEvent = new Event(
-        LocalDateTime.of(2023, 10, 13, 13, 00, 00), LocalDateTime.of(2023, 10, 13, 15, 00, 00)
+        LocalDateTime.of(2023, 10, 13, 13, 00, 00),
+        LocalDateTime.of(2023, 10, 13, 15, 00, 00),
+        ORGANIZER
     );
     Event notOverLappingEvent = new Event(
-        LocalDateTime.of(2023, 10, 13, 15, 00, 00), LocalDateTime.of(2023, 10, 13, 16, 00, 00)
+        LocalDateTime.of(2023, 10, 13, 15, 00, 00),
+        LocalDateTime.of(2023, 10, 13, 16, 00, 00),
+        ORGANIZER
     );
 
     allEventsForTheDay.add(overLappingEvent);
