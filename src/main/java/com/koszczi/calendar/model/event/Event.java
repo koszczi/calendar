@@ -16,9 +16,7 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 
 @Entity
-@Table(name = "events", indexes = {
-    @Index(name = "event_year_week", columnList = "year, week"),
-})
+@Table(name = "calendar_events", indexes = { @Index(name = "event_year_week", columnList = "calendar_year, week_of_year")} )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "id")
 @Getter
@@ -29,10 +27,10 @@ public class Event extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "year")
+  @Column(name = "calendar_year")
   private int year;
 
-  @Column(name = "week")
+  @Column(name = "week_of_year")
   private int week;
 
   @Column(name = "day_of_week")
@@ -41,10 +39,10 @@ public class Event extends BaseEntity {
   @Column(name = "date")
   private LocalDate date;
 
-  @Column(name = "start")
+  @Column(name = "event_start")
   private LocalTime start;
 
-  @Column(name = "end")
+  @Column(name = "event_end")
   private LocalTime end;
 
   public Event(LocalDateTime start, LocalDateTime end) {
@@ -57,4 +55,8 @@ public class Event extends BaseEntity {
     this.end = end.toLocalTime();
   }
 
+  @Override
+  public String toString() {
+    return String.format("Event on %s, from %s to %s", date.toString(), start.toString(), end.toString());
+  }
 }

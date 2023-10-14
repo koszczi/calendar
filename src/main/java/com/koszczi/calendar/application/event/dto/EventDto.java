@@ -1,4 +1,4 @@
-package com.koszczi.calendar.application.event;
+package com.koszczi.calendar.application.event.dto;
 
 import java.time.LocalDateTime;
 
