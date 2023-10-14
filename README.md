@@ -9,7 +9,7 @@ A simple calendar implementation
 
 Input body format: `{"startDateTime": "2023-10-13T11:00:00", "endDateTime": "2023-10-13T13:00:00", "organizer": "just me"}`
 
-Output example 2 - input validation errors:
+Output example 1 - input validation errors (response code is `400 - Bad Request`):
 ```
 {
     "status": "VALIDATION_FAILURE",
@@ -36,7 +36,7 @@ Output example 2 - input validation errors:
 }
 ```
 
-Output example 2 - overlapping with existing events:
+Output example 2 - overlapping with existing events (response code is `400 - Bad Request`):
 ```
 {
     "status": "VALIDATION_FAILURE",
@@ -54,7 +54,7 @@ Output example 2 - overlapping with existing events:
 }
 ```
 
-Output example 3 - successfully created event:
+Output example 3 - successfully created event (response code is `200 - Ok`):
 ```
 {
     "status": "SUCCESS",
@@ -72,3 +72,5 @@ Output example 3 - successfully created event:
     }
 }
 ```
+
+Output is empty unknown error, response code is `500 - Internal Server Error`
