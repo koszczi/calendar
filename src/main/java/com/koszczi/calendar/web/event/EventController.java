@@ -17,7 +17,7 @@ public class EventController {
 
   private final EventService eventService;
 
-  @PostMapping("create")
+  @PostMapping
   public ResponseEntity<EventCreationResult> createEvent(@RequestBody EventDto eventDto) {
     EventCreationResult result = eventService.createEvent(eventDto);
     return switch (result.status()) {

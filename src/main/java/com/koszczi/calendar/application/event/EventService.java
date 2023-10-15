@@ -9,6 +9,7 @@ import com.koszczi.calendar.model.event.Event;
 import com.koszczi.calendar.model.event.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import static com.koszczi.calendar.application.event.dto.EventCreationStatus.*;
 
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class EventService {
 
   private final EventRepository eventRepository;

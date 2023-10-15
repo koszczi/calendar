@@ -5,9 +5,10 @@ A simple calendar implementation
 
 ## Event creation
 
-`POST http://<host>/events/create`
+`POST http://<host>/events`
 
-Input body format: `{"startDateTime": "2023-10-13T11:00:00", "endDateTime": "2023-10-13T13:00:00", "organizer": "just me"}`
+Input body format:
+`{"startDateTime": "2023-10-13T11:00:00", "endDateTime": "2023-10-13T13:00:00", "organizer": "just me"}`
 
 Output example 1 - input validation errors (response code is `400 - Bad Request`):
 ```
