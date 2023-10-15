@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,10 @@ public class EventController {
   @GetMapping("weeklySchedule")
   public Map<DayOfWeek, List<String>> weeklySchedule(@RequestParam int year, @RequestParam int week) {
     return eventService.generateWeeklySchedule(year, week);
+  }
+
+  @GetMapping("dailyFreeSlots")
+  public List<String> dailyFreeSlots(@RequestParam LocalDate day) {
+    return eventService.collectFreeSlotsForDay(day);
   }
 }

@@ -63,6 +63,14 @@ public class EventService {
     return weeklySchedule;
   }
 
+  public List<String> collectFreeSlotsForDay(LocalDate day) {
+    Collection<Event> dailyEvents= eventRepository.findAllByDate(day);
+    return scheduleGenerator.generateDailySchedule(day, dailyEvents)
+        .stream()
+        .filter(s -> !s.contains(ScheduleGenerator.RESERVED_SLOT))
+        .toList();
+  }
+
   private LocalDate generateDateFromYearWeekAndDay(int year, int week, DayOfWeek dayOfWeek) {
     return LocalDate.of(year, 1, 1)
         .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)

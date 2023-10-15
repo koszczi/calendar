@@ -103,3 +103,16 @@ Example response:
     ]
 }
 ```
+
+## Free slots for a day
+
+Example call
+`GET http://<host>/events/dailyFreeSlots?day=2023-10-11`
+
+Example response
+```
+[
+    "Free slot between 09:00 and 10:00",
+    "Free slot between 12:00 and 17:00"
+]
+```
