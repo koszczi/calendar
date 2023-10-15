@@ -54,6 +54,8 @@ public class EventService {
     EnumSet<DayOfWeek> daysOfWeek = EnumSet.allOf(DayOfWeek.class);
     Collection<Event> weeklyEvents = eventRepository.findAllByYearAndWeek(year, week);
     for (DayOfWeek day: daysOfWeek) {
+      if (DayOfWeek.SATURDAY.equals(day))
+        break;
       LocalDate actualDate = generateDateFromYearWeekAndDay(year, week, day);
       Collection<Event> dailyEvents = weeklyEvents.stream().filter(e -> day.equals(e.getDayOfWeek())).toList();
       weeklySchedule.put(day, scheduleGenerator.generateDailySchedule(actualDate, dailyEvents));

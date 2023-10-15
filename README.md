@@ -100,12 +100,6 @@ Example response:
     ],
     "FRIDAY": [
         "Free slot between 09:00 and 17:00"
-    ],
-    "SATURDAY": [
-        "Free slot between 09:00 and 17:00"
-    ],
-    "SUNDAY": [
-        "Free slot between 09:00 and 17:00"
     ]
 }
 ```
