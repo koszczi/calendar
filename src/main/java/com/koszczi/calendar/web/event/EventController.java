@@ -5,10 +5,11 @@ import com.koszczi.calendar.application.event.dto.EventCreationResult;
 import com.koszczi.calendar.application.event.dto.EventDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.DayOfWeek;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +26,10 @@ public class EventController {
       case VALIDATION_FAILURE -> ResponseEntity.badRequest().body(result);
       case ERROR -> ResponseEntity.internalServerError().build();
     };
+  }
+
+  @GetMapping("weeklySchedule")
+  public Map<DayOfWeek, List<String>> weeklySchedule(@RequestParam int year, @RequestParam int week) {
+    return eventService.generateWeeklySchedule(year, week);
   }
 }

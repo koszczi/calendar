@@ -75,3 +75,37 @@ Output example 3 - successfully created event (response code is `200 - Ok`):
 ```
 
 Output is empty unknown error, response code is `500 - Internal Server Error`
+
+## Weekly schedule
+
+Example call
+`GET http://<host>/events/weeklySchedule?year=2023&week=41`
+
+Example response:
+```
+{
+    "MONDAY": [
+        "Free slot between 09:00 and 17:00"
+    ],
+    "TUESDAY": [
+        "Free slot between 09:00 and 17:00"
+    ],
+    "WEDNESDAY": [
+        "Free slot between 09:00 and 10:00",
+        "Reserved slot between 10:00 and 12:00",
+        "Free slot between 12:00 and 17:00"
+    ],
+    "THURSDAY": [
+        "Free slot between 09:00 and 17:00"
+    ],
+    "FRIDAY": [
+        "Free slot between 09:00 and 17:00"
+    ],
+    "SATURDAY": [
+        "Free slot between 09:00 and 17:00"
+    ],
+    "SUNDAY": [
+        "Free slot between 09:00 and 17:00"
+    ]
+}
+```

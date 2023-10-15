@@ -11,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 import static com.koszczi.calendar.application.event.dto.ValidationError.OVERLAPPING_EVENTS;
 import static com.koszczi.calendar.application.event.dto.EventCreationStatus.*;
@@ -24,6 +27,7 @@ public class EventService {
 
   private final EventRepository eventRepository;
   private final EventValidator eventValidator;
+  private final ScheduleGenerator scheduleGenerator;
 
   public EventCreationResult createEvent(EventDto eventDto) {
     try {
@@ -43,6 +47,24 @@ public class EventService {
       log.error("Error creating calendar event", e);
       return new EventCreationResult(ERROR, List.of(), List.of(), null);
     }
+  }
+
+  public Map<DayOfWeek, List<String>> generateWeeklySchedule(int year, int week) {
+    Map<DayOfWeek, List<String>> weeklySchedule = new TreeMap<>();
+    EnumSet<DayOfWeek> daysOfWeek = EnumSet.allOf(DayOfWeek.class);
+    Collection<Event> weeklyEvents = eventRepository.findAllByYearAndWeek(year, week);
+    for (DayOfWeek day: daysOfWeek) {
+      LocalDate actualDate = generateDateFromYearWeekAndDay(year, week, day);
+      Collection<Event> dailyEvents = weeklyEvents.stream().filter(e -> day.equals(e.getDayOfWeek())).toList();
+      weeklySchedule.put(day, scheduleGenerator.generateDailySchedule(actualDate, dailyEvents));
+    }
+    return weeklySchedule;
+  }
+
+  private LocalDate generateDateFromYearWeekAndDay(int year, int week, DayOfWeek dayOfWeek) {
+    return LocalDate.of(year, 1, 1)
+        .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)
+        .with(TemporalAdjusters.previousOrSame(dayOfWeek));
   }
 
   private List<String> collectOverlappingEvents(Event newEvent) {
