@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -69,6 +70,16 @@ public class EventService {
         .stream()
         .filter(s -> !s.contains(ScheduleGenerator.RESERVED_SLOT))
         .toList();
+  }
+
+  public String findEventForTime(LocalDateTime time) {
+    return eventRepository
+        .findAllByDate(time.toLocalDate())
+        .stream()
+        .filter(e -> !time.toLocalTime().isBefore(e.getStart()) && !time.toLocalTime().isAfter(e.getEnd()))
+        .findFirst()
+        .map(Event::toString)
+        .orElseGet(() -> "Not reserved");
   }
 
   private LocalDate generateDateFromYearWeekAndDay(int year, int week, DayOfWeek dayOfWeek) {

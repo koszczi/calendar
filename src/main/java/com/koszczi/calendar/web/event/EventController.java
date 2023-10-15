@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -37,5 +38,10 @@ public class EventController {
   @GetMapping("dailyFreeSlots")
   public List<String> dailyFreeSlots(@RequestParam LocalDate day) {
     return eventService.collectFreeSlotsForDay(day);
+  }
+
+  @GetMapping("isReserved")
+  public String isReserved(@RequestParam LocalDateTime dateTime) {
+    return eventService.findEventForTime(dateTime);
   }
 }

@@ -116,3 +116,12 @@ Example response
     "Free slot between 12:00 and 17:00"
 ]
 ```
+
+## Check if a certain time is reserved
+
+Example call
+`GET http://<host>/events/isReserved?dateTime=2023-10-11T10:00:00`
+
+Example response 
+`Event on 2023-10-11, from 10:00 to 12:00, organized by Someone`
+or `Not reserved`
